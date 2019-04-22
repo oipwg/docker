@@ -1,0 +1,36 @@
+version: '3'
+
+services:
+  gofloMainnet:
+    build: go-flo
+    hostname: goflo
+    ports:
+      - 7316:7316
+      - 127.0.0.1:7317:7317
+    volumes:
+      - goFloHome:/root/.flod/
+    networks:
+      - floMainnetNetwork
+    environment:
+      - TESTNET=0
+
+  gofloTestnet:
+    build: go-flo
+    hostname: goflo
+    ports:
+      - 17316:7316
+      - 127.0.0.1:17317:7317
+    volumes:
+      - goFloTestnetHome:/root/.flod/
+    networks:
+      - floTestnetNetwork
+    environment:
+      - TESTNET=1
+
+networks:
+  floMainnetNetwork:
+  floTestnetNetwork:
+
+volumes:
+  goFloMainnetHome:
+  goFloTestnetHome:
