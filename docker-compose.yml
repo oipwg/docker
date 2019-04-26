@@ -11,21 +11,21 @@ services:
       - goFloHome:/root/.flod/
     networks:
       - floMainnetNetwork
-    environment:
-      - TESTNET=0
+    args:
+      network: mainnet
 
   gofloTestnet:
     build: go-flo
     hostname: goflo
     ports:
-      - 17316:7316
-      - 127.0.0.1:17317:7317
+      - 17316:17316
+      - 127.0.0.1:17317:17317
     volumes:
       - goFloTestnetHome:/root/.flod/
     networks:
       - floTestnetNetwork
-    environment:
-      - TESTNET=1
+    args:
+      network: testnet
 
 networks:
   floMainnetNetwork:

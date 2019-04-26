@@ -10,10 +10,10 @@ RUN go install . ./cmd/...
 
 
 FROM alpine:latest
+ARG network=mainnet
 
 COPY --from=build /go/bin/flod /flod/bin/flod
-COPY ./flod.conf /flod/flod.conf
-
+COPY ./${network}.conf /flod/flod.conf
 
 VOLUME ["/root/.flod/"]
 ENTRYPOINT ["/flod/bin/flod", "--configfile=/flod/flod.conf"]
