@@ -52,3 +52,13 @@
   }
   cors
 }
+
+
+:80/ipfs {
+  import std
+  gzip
+  proxy / ipfs:8080/ipfs {
+	transparent
+  }
+  cors
+}

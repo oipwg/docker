@@ -42,6 +42,8 @@ services:
     volumes:
       - ./ipfsStaging:/export
       - ipfsData:/data/ipfs
+    networks:
+      - caddyNetwork
 
   esmainnet:
     image: docker.elastic.co/elasticsearch/elasticsearch:6.7.1
@@ -86,6 +88,7 @@ services:
     environment:
       SERVER_HOST: 0.0.0.0
       SERVER_BASEPATH: "/mainnet/kibana"
+      ELASTICSEARCH_HOSTS: http://esmainnet
 
   kibanatestnet:
     image: docker.elastic.co/kibana/kibana:6.7.1
@@ -100,6 +103,7 @@ services:
     environment:
       SERVER_HOST: 0.0.0.0
       SERVER_BASEPATH: "/testnet/kibana"
+      ELASTICSEARCH_HOSTS: http://estestnet
 
   oipmainnet:
     build:
