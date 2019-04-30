@@ -66,9 +66,17 @@ Web wallet provides a multi currency web accessible wallet
 ### Go-Flo
 Modify `go-flo/mainnet.conf`
 
-- Build image - necessary if config file is modified `docker-compose build goFloMainnet`
+- Build image - necessary if config file is modified `docker-compose build goflomainnet`
 - Run daemon in background `docker-compose up -d goflomainnet`
 - Tail daemon logs `docker-compose logs -f goflomainnet`
+
+
+### OIP
+Modify `oip/config.mainnet.yml`
+
+- Build image - necessary if config file is modified `docker-compose build oipmainnet`
+- Run daemon in background `docker-compose up -d oipmainnet`
+- Tail daemon logs `docker-compose logs -f oipmainnet`
 
 
 ### Elasticsearch
@@ -94,6 +102,14 @@ Modify `go-flo/testnet.conf`
 - Build image - necessary if config file is modified `docker-compose build goflotestnet`
 - Run daemon in background `docker-compose up -d goflotestnet`
 - Tail daemon logs `docker-compose logs -f goflotestnet`
+
+
+### OIP
+Modify `oip/config.testnet.yml`
+
+- Build image - necessary if config file is modified `docker-compose build oiptestnet`
+- Run daemon in background `docker-compose up -d oiptestnet`
+- Tail daemon logs `docker-compose logs -f oiptestnet`
 
 
 ### Elasticsearch
