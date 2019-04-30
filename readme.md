@@ -18,22 +18,29 @@ Docker Compose configurations for basic FLO/OIP related daemons.
 - Caddy
 - IPFS
 
-
-### Go-Flo Mainnet
-Modify `go-flo/mainnet.conf`
-
-- Build image - necessary if config file is modified `docker-compose build goFloMainnet`
-- Run daemon in background `docker-compose up -d goFloMainnet`
-- Tail daemon logs `docker-compose logs -f goFloMainnet`
+# Common
 
 
+### Caddy
+Caddy provides a reverse proxy to the potential running services herein  
+Configuration/Customization may take place by modifying `caddy/Caddyfile` and adding plugins to `caddy/with_plugins.go`
 
-### Go-Flo Testnet
-Modify `go-flo/testnet.conf`
+By default Caddy will provide http:// on port 80 listening on all interfaces
 
-- Build image - necessary if config file is modified `docker-compose build goFloTestnet`
-- Run daemon in background `docker-compose up -d goFloTestnet`
-- Tail daemon logs `docker-compose logs -f goFloTestnet`
+```
+http://<ip>/                    Web wallet
+http://<ip>/mainnet/oip         OIP daemon apis running on mainnet
+http://<ip>/mainnet/kibana      Kibana instance running on mainnet
+                                user:pass = kibana:mainnet
+http://<ip>/testnet/oip         OIP daemon apis running on testnet
+http://<ip>/testnet/kibana      Kibana instance running on testnet
+                                user:pass = kibana:testnet
+http://<ip>/ipfs/               IPFS Gateway
+```
+
+- Build image - necessary if Caddyfile or with_plugins.go are modified `docker-compose build caddy`
+- Run daemon in background `docker-compose up -d caddy`
+- Tail daemon logs `docker-compose logs -f caddy`
 
 
 
@@ -43,4 +50,61 @@ A local directory at `./ipfsStaging` is available and mounted as `/export` withi
 - Build image - necessary if config file is modified `docker-compose build ipfs`
 - Run daemon in background `docker-compose up -d ipfs`
 - Tail daemon logs `docker-compose logs -f ipfs`
+
+
+### Web Wallet
+Web wallet provides a multi currency web accessible wallet
+
+- Run daemon in background `docker-compose up -d webwallet`
+- Tail daemon logs `docker-compose logs -f webwallet`
+
+
+
+# Mainnet
+
+
+### Go-Flo
+Modify `go-flo/mainnet.conf`
+
+- Build image - necessary if config file is modified `docker-compose build goFloMainnet`
+- Run daemon in background `docker-compose up -d goflomainnet`
+- Tail daemon logs `docker-compose logs -f goflomainnet`
+
+
+### Elasticsearch
+Elasticsearch mainnet defaults to 4GB Heap size, adjust `ES_JAVA_OPTS` as appropriate
+
+- Run daemon in background `docker-compose up -d esmainnet`
+- Tail daemon logs `docker-compose logs -f esmainnet`
+
+
+### Kibana
+
+- Run daemon in background `docker-compose up -d kibanamainnet`
+- Tail daemon logs `docker-compose logs -f kibanamainnet`
+
+
+
+# Testnet
+
+
+### Go-Flo
+Modify `go-flo/testnet.conf`
+
+- Build image - necessary if config file is modified `docker-compose build goflotestnet`
+- Run daemon in background `docker-compose up -d goflotestnet`
+- Tail daemon logs `docker-compose logs -f goflotestnet`
+
+
+### Elasticsearch
+Elasticsearch testnet defaults to 2GB Heap size, adjust `ES_JAVA_OPTS` as appropriate
+
+- Run daemon in background `docker-compose up -d estestnet`
+- Tail daemon logs `docker-compose logs -f estestnet`
+
+
+### Kibana
+
+- Run daemon in background `docker-compose up -d kibanatestnet`
+- Tail daemon logs `docker-compose logs -f kibanatestnet`
 
