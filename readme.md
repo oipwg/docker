@@ -3,13 +3,19 @@
 Docker Compose configurations for basic FLO/OIP related daemons.
 
 
-##Prerequisites
+## Prerequisites
 - Docker Compose - https://docs.docker.com/compose/install/
 
 
 ## Currently supported daemons
 - Go-Flo Mainnet
 - Go-Flo Testnet
+- OIP Web Wallet
+- OIP Mainnet
+- OIP Testnet
+- Elasticsearch
+- Kibana
+- Caddy
 - IPFS
 
 
@@ -28,6 +34,7 @@ Modify `go-flo/testnet.conf`
 - Build image - necessary if config file is modified `docker-compose build goFloTestnet`
 - Run daemon in background `docker-compose up -d goFloTestnet`
 - Tail daemon logs `docker-compose logs -f goFloTestnet`
+
 
 
 ### IPFS

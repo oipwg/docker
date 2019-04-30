@@ -1,22 +1,28 @@
 version: '3'
 
 services:
-  gofloMainnet:
-    build: go-flo
-    hostname: goflo
+  goflomainnet:
+    build:
+      context: go-flo
+      dockerfile: Dockerfile
+      args:
+        network: mainnet
+    hostname: goflomainnet
     ports:
       - 7316:7316
       - 127.0.0.1:7317:7317
     volumes:
-      - goFloHome:/root/.flod/
+      - goFloMainnetHome:/root/.flod/
     networks:
       - floMainnetNetwork
-    args:
-      network: mainnet
 
-  gofloTestnet:
-    build: go-flo
-    hostname: goflo
+  goflotestnet:
+    build:
+      context: go-flo
+      dockerfile: Dockerfile
+      args:
+        network: testnet
+    hostname: goflotestnet
     ports:
       - 17316:17316
       - 127.0.0.1:17317:17317
@@ -24,8 +30,6 @@ services:
       - goFloTestnetHome:/root/.flod/
     networks:
       - floTestnetNetwork
-    args:
-      network: testnet
 
   ipfs:
     image: ipfs/go-ipfs:latest
@@ -39,11 +43,131 @@ services:
       - ./ipfsStaging:/export
       - ipfsData:/data/ipfs
 
+  esmainnet:
+    image: docker.elastic.co/elasticsearch/elasticsearch:6.7.1
+    environment:
+      - cluster.name=mainnet-cluster
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms4g -Xmx4g"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - esMainnetData:/usr/share/elasticsearch/data
+    networks:
+      - esMainnetNetwork
+
+  estestnet:
+    image: docker.elastic.co/elasticsearch/elasticsearch:6.7.1
+    environment:
+      - cluster.name=testnet-cluster
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms2g -Xmx2g"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - esTestnetData:/usr/share/elasticsearch/data
+    networks:
+      - esTestnetNetwork
+
+  kibanamainnet:
+    image: docker.elastic.co/kibana/kibana:6.7.1
+    hostname: kibanaMainnet
+    depends_on:
+      - esmainnet
+    ports:
+      - 127.0.0.1:5601:5601
+    networks:
+      - esMainnetNetwork
+      - caddyNetwork
+    environment:
+      SERVER_HOST: 0.0.0.0
+      SERVER_BASEPATH: "/mainnet/kibana"
+
+  kibanatestnet:
+    image: docker.elastic.co/kibana/kibana:6.7.1
+    hostname: kibanaTestnet
+    depends_on:
+      - estestnet
+    ports:
+      - 127.0.0.1:15601:5601
+    networks:
+      - esTestnetNetwork
+      - caddyNetwork
+    environment:
+      SERVER_HOST: 0.0.0.0
+      SERVER_BASEPATH: "/testnet/kibana"
+
+  oipmainnet:
+    build:
+      context: oip/
+      dockerfile: Dockerfile
+      args:
+        network: mainnet
+    depends_on:
+      - goflomainnet
+      - esmainnet
+    ports:
+      - 127.0.0.1:1606:1606
+    networks:
+      - esMainnetNetwork
+      - floMainnetNetwork
+      - caddyNetwork
+    volumes:
+      - goFloMainnetHome:/flo/
+
+  oiptestnet:
+    build:
+      context: oip/
+      dockerfile: Dockerfile
+      args:
+        network: testnet
+    depends_on:
+      - goflotestnet
+      - estestnet
+    ports:
+      - 127.0.0.1:11606:11606
+    networks:
+      - esTestnetNetwork
+      - floTestnetNetwork
+      - caddyNetwork
+    volumes:
+      - goFloTestnetHome:/flo/
+
+  webwallet:
+    build: webwallet
+    networks:
+      - caddyNetwork
+    environment:
+      - NODE_ENV=production
+    ports:
+      - 127.0.0.1:7000:7000
+
+  caddy:
+    build:
+      context: caddy/
+      dockerfile: Dockerfile
+      args:
+        CADDY_VERSION: ${CADDY_VERSION:-0.11.5}
+    ports:
+      - 80:80
+      - 443:443
+    networks:
+      - caddyNetwork
+
 networks:
+  esMainnetNetwork:
+  esTestnetNetwork:
   floMainnetNetwork:
   floTestnetNetwork:
+  caddyNetwork:
 
 volumes:
   goFloMainnetHome:
   goFloTestnetHome:
+  esTestnetData:
+  esMainnetData:
   ipfsData:

@@ -1,0 +1,68 @@
+---
+
+# Elastic search
+elastic:
+  # Use client certificates for authentication
+  useCert: false
+  # Elastic search address
+  host: http://estestnet:9200
+
+# go-flo daemon
+flod:
+  # Flod websocket RPC address
+  host: goflotestnet:17317
+  # Flod RPC authentication
+  user: user
+  pass: pass
+
+  tls: true
+  # Flod RPC authorization certificate
+  # By default reads certificate directly from Flod data directory
+  certFile: /flo/rpc.cert
+
+# Oip daemon
+oip:
+  # Flo network to validate "mainnet" or "testnet"
+  network: testnet
+
+  # Artifact rules
+  artifact:
+    strict: false
+    active:
+      - research-tomogram
+      - property-party
+      - property-tenure
+      - property-spatialunit
+      - video-*
+      - "*-*"
+
+    # Ignores override active
+    ignore:
+    # - property-party
+
+  # http-api
+  api:
+    listen: :11606
+    enabled: true
+
+  # Txid lists to be disregarded
+  blacklist:
+    # Core lists bundled with the binary build
+    bundled:
+      - dmca
+      - nsfw
+
+    # Url to remote black lists
+    remote:
+      # Interval at which remote lists are updated
+      # Must be valid golang duration, or 'false'
+      # If false updates only once at startup
+      # see: https://golang.org/pkg/time/#ParseDuration
+      refresh: false
+      # refresh: false
+
+      # List of remote blacklists to fetch
+      # label: remote url
+      urls:
+        # testnet-example: https://gist.githubusercontent.com/bitspill/ca1a48ec608e18d00892c779f72315b6/raw/8336839d4797a0731de3d338173505ba182c32e7/example.spam.filter.txt
+        # second-list: https://example.com/another.list.txt
