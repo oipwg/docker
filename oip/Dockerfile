@@ -7,7 +7,7 @@ ARG DEP_VERSION="0.5.0"
 RUN curl -L -s https://github.com/golang/dep/releases/download/v${DEP_VERSION}/dep-linux-amd64 \
         -o /go/bin/dep && chmod +x /go/bin/dep
 
-RUN go get -u github.com/gobuffalo/packr/v2/packr2
+RUN go get -u github.com/gobuffalo/packr/packr2
 
 # OIP daemon from scs branch on bitspills experimental fork
 ARG OIP_VERSION="2846d1dc743de10861028eb45f912e43231fc676"
