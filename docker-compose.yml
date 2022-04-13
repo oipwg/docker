@@ -42,8 +42,6 @@ services:
     volumes:
       - ./ipfsStaging:/export
       - ipfsData:/data/ipfs
-    networks:
-      - caddyNetwork
 
   esmainnet:
     image: docker.elastic.co/elasticsearch/elasticsearch:6.7.1
@@ -84,7 +82,6 @@ services:
       - 127.0.0.1:5601:5601
     networks:
       - esMainnetNetwork
-      - caddyNetwork
     environment:
       SERVER_HOST: 0.0.0.0
       SERVER_BASEPATH: "/mainnet/kibana"
@@ -99,7 +96,6 @@ services:
       - 127.0.0.1:15601:5601
     networks:
       - esTestnetNetwork
-      - caddyNetwork
     environment:
       SERVER_HOST: 0.0.0.0
       SERVER_BASEPATH: "/testnet/kibana"
@@ -119,7 +115,6 @@ services:
     networks:
       - esMainnetNetwork
       - floMainnetNetwork
-      - caddyNetwork
     volumes:
       - goFloMainnetHome:/flo/
 
@@ -137,37 +132,22 @@ services:
     networks:
       - esTestnetNetwork
       - floTestnetNetwork
-      - caddyNetwork
     volumes:
       - goFloTestnetHome:/flo/
 
   webwallet:
     build: webwallet
-    networks:
-      - caddyNetwork
     environment:
       - NODE_ENV=production
     ports:
       - 127.0.0.1:7000:7000
 
-  caddy:
-    build:
-      context: caddy/
-      dockerfile: Dockerfile
-      args:
-        CADDY_VERSION: ${CADDY_VERSION:-0.11.5}
-    ports:
-      - 80:80
-      - 443:443
-    networks:
-      - caddyNetwork
 
 networks:
   esMainnetNetwork:
   esTestnetNetwork:
   floMainnetNetwork:
   floTestnetNetwork:
-  caddyNetwork:
 
 volumes:
   goFloMainnetHome:
