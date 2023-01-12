@@ -9,8 +9,8 @@ services:
         network: mainnet
     hostname: goflomainnet
     ports:
-      - 7316:7316
-      - 127.0.0.1:7317:7317
+      - "7316:7316"
+      - "127.0.0.1:7317:7317"
     volumes:
       - goFloMainnetHome:/root/.flod/
     networks:
@@ -24,8 +24,8 @@ services:
         network: testnet
     hostname: goflotestnet
     ports:
-      - 17316:17316
-      - 127.0.0.1:17317:17317
+      - "17316:17316"
+      - "127.0.0.1:17317:17317"
     volumes:
       - goFloTestnetHome:/root/.flod/
     networks:
@@ -36,17 +36,18 @@ services:
     environment:
       - IPFS_PROFILE=server
     ports:
-      - 4001:4001
-      - 127.0.0.1:8080:8080
-      - 127.0.0.1:5001:5001
+      - "4001:4001"
+      - "127.0.0.1:8080:8080"
+      - "127.0.0.1:5001:5001"
     volumes:
       - ./ipfsStaging:/export
       - ipfsData:/data/ipfs
 
   esmainnet:
-    image: docker.elastic.co/elasticsearch/elasticsearch:6.7.1
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.8
     environment:
       - cluster.name=mainnet-cluster
+      - discovery.type=single-node
       - bootstrap.memory_lock=true
       - "ES_JAVA_OPTS=-Xms4g -Xmx4g"
     ulimits:
@@ -59,9 +60,10 @@ services:
       - esMainnetNetwork
 
   estestnet:
-    image: docker.elastic.co/elasticsearch/elasticsearch:6.7.1
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.8
     environment:
       - cluster.name=testnet-cluster
+      - discovery.type=single-node
       - bootstrap.memory_lock=true
       - "ES_JAVA_OPTS=-Xms2g -Xmx2g"
     ulimits:
@@ -74,32 +76,34 @@ services:
       - esTestnetNetwork
 
   kibanamainnet:
-    image: docker.elastic.co/kibana/kibana:6.7.1
+    image: docker.elastic.co/kibana/kibana:7.17.8
     hostname: kibanaMainnet
     depends_on:
       - esmainnet
     ports:
-      - 127.0.0.1:5601:5601
+      - "127.0.0.1:5601:5601"
     networks:
       - esMainnetNetwork
     environment:
       SERVER_HOST: 0.0.0.0
-      SERVER_BASEPATH: "/mainnet/kibana"
-      ELASTICSEARCH_HOSTS: http://esmainnet
+      # SERVER_BASEPATH: "/mainnet/kibana"
+      # SERVER_REWRITEBASEPATH:
+      ELASTICSEARCH_HOSTS: http://esmainnet:9200
 
   kibanatestnet:
-    image: docker.elastic.co/kibana/kibana:6.7.1
+    image: docker.elastic.co/kibana/kibana:7.17.8
     hostname: kibanaTestnet
     depends_on:
       - estestnet
     ports:
-      - 127.0.0.1:15601:5601
+      - "127.0.0.1:15601:5601"
     networks:
       - esTestnetNetwork
     environment:
       SERVER_HOST: 0.0.0.0
-      SERVER_BASEPATH: "/testnet/kibana"
-      ELASTICSEARCH_HOSTS: http://estestnet
+      # SERVER_BASEPATH: "/testnet/kibana"
+      # SERVER_REWRITEBASEPATH:
+      ELASTICSEARCH_HOSTS: http://estestnet:9200
 
   oipmainnet:
     build:
@@ -111,7 +115,7 @@ services:
       - goflomainnet
       - esmainnet
     ports:
-      - 127.0.0.1:1606:1606
+      - "127.0.0.1:1606:1606"
     networks:
       - esMainnetNetwork
       - floMainnetNetwork
@@ -128,7 +132,7 @@ services:
       - goflotestnet
       - estestnet
     ports:
-      - 127.0.0.1:11606:11606
+      - "127.0.0.1:11606:11606"
     networks:
       - esTestnetNetwork
       - floTestnetNetwork
@@ -140,7 +144,7 @@ services:
     environment:
       - NODE_ENV=production
     ports:
-      - 127.0.0.1:7000:7000
+      - "127.0.0.1:7000:7000"
 
 
 networks:
