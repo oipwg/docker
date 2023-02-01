@@ -1,4 +1,4 @@
-FROM node:latest
+FROM node:10.24.1
 
 RUN git clone https://github.com/oipwg/oip-hdmw-interface /usr/src/webwallet
 WORKDIR /usr/src/webwallet
